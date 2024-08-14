@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+    <div class="bg-gray-200 text-sm">
+        <div class="container-fluid">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0 py-3">
+            <li class="breadcrumb-item"><a class="fw-light" href="/dashboard">Home</a></li>
+            <li class="breadcrumb-item fw-light" aria-current="page"><a class="fw-light" href="{% url 'role' %}">Role</a> </li>
+            <li class="breadcrumb-item active fw-light" aria-current="page">Role Desc</li>
+            </ol>
+        </nav>
+        </div>
+    </div>
+
+    <header class="py-4">
+        <div class="container-fluid py-2">
+          <h1 class="h3 fw-normal mb-0">This is the Role Description</h1>
+        </div>
+      </header>
+
+      <section class="tables">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="card">
+                <div class="card-header border-bottom">
+                  <div class="row align-items-center">
+                    <div class="col-md-6">
+                      <h3 class="h4 mb-0">Role Description Table</h3>
+                    </div>
+                    <div class="col-md-6 text-md-end"> 
+                       <form method="post" action="{% url 'delete_role' role.id %}">
+                          {% csrf_token %}
+                          <button type="submit" class="btn btn-danger mt-1">Delete</button>
+                         </form> 
+                      <a href={% url 'new_role_edit' role.id %} class="btn btn-success mt-1">--Edit--</a>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-body">
+                    <div class="col-md-12">
+                      <!-- Project Information -->
+                      <dl class="row">
+                        <dt class="col-sm-4">Role Name:</dt>
+                        <dd class="col-sm-8"><strong>{{ role.role_name }}</strong></dd>
+                      
+         
+                        <hr>
+                        <dt class="col-sm-4">User:</dt>
+                        <dd class="col-sm-8">{{ role.user }}</dd>
+                        <hr>
+                        <dt class="col-sm-4">Admin:</dt>
+                        <dd class="col-sm-8">{{ role.full_access }}</dd>
+                        <hr>
+                        <dt class="col-sm-4">Super Admin:</dt>
+                        <dd class="col-sm-8">{{ role.super_admin }}</dd>                 
+                      </dl>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
+        </div>
+      </section>
+
+{% endblock %}
+

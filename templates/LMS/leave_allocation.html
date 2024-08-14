@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+  <style>
+    .table th, .table td {
+      text-align: center;
+    }
+    
+    .table-responsive {
+      overflow-x: auto;
+    }
+  </style>  
+
+    <div class="bg-gray-200 text-sm">
+      <div class="container-fluid">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb mb-0 py-3">
+            <li class="breadcrumb-item"><a class="fw-light" href="/dashboard">Home</a></li>
+            <li class="breadcrumb-item active fw-light" aria-current="page">Leave Allocation</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+
+    <div class="container mb-3">
+      <div class="row">
+        <div class="col-md-8 mx-auto">
+          <div class="card">
+            <div class="card-body p-5">
+              <header class="text-center mb-5">
+                <h1 class="text-xxl text-gray-400 text-uppercase">Allocate<strong class="text-primary">-Leave Here</strong></h1>
+                <p class="text-gray-500 fw-light">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud.</p>
+              </header>
+              <div>
+                <section class="tables">
+                  <div class="container-fluid">
+                    <form class="narrow-form" action="" method="post">
+                      {% csrf_token %}
+                  
+                      <div class="form-group mt-2">
+                          <label for="employee"><strong>Employee:</strong></label>
+                          {{ form.employee }}
+                          {% for error in form.employee.errors %}
+                              <span class="error">{{ error }}</span>
+                          {% endfor %}
+                      </div>
+                  
+                      <div class="form-group mt-2">
+                          <label for="leave_type"><strong>Leave Type:</strong></label>
+                          {{ form.leave_type }}
+                          {% for error in form.leave_type.errors %}
+                              <span class="error">{{ error }}</span>
+                          {% endfor %}
+                      </div>
+                  
+                      {% if messages %}
+                          <div class="alert alert-success">
+                              {% for message in messages %}
+                                  {{ message }}
+                              {% endfor %}
+                          </div>
+                      {% endif %}
+                  
+                      {% if form.non_field_errors %}
+                          <div class="alert alert-danger">
+                              {% for error in form.non_field_errors %}
+                                  {{ error }}
+                              {% endfor %}
+                          </div>
+                      {% endif %}
+                  
+                      <div class="form-group mt-2">
+                          <button type="submit" class="btn btn-success mt-2">Save</button>
+                          <a href="{% url 'leave_allocation' %}" class="btn btn-success mt-2">Cancel</a>
+                      </div>
+                  </form>
+                  </div>
+              </section>
+<br><br>
+            {% comment %} <div class="table-responsive">
+              <table class="table table-bordered">
+                  <thead>
+                      <tr>
+                          <th></th>
+                          {% for leave_type in leave_types %}
+                              <th>{{ leave_type }}</th>
+                          {% endfor %}
+                      </tr>
+                  </thead>
+                  <tbody>
+                      {% for user_data in user_data %}
+                          <tr>
+                              <td>{{ user_data.user }}</td>
+                              {% for leave_type in leave_types %}
+                                  <td>
+                                  </td>
+                              {% endfor %}
+                          </tr>
+                      {% endfor %}
+                  </tbody>
+              </table>
+            </div>
+ {% endcomment %}
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section class="tables">
+      <div class="container-fluid">
+          <div class="row">
+              <div class="col-lg-12">
+                  <div class="card">
+                      <div class="card-header border-bottom">
+                          <h3 class="h4 mb-0">Leave History</h3>
+                      </div>
+                      <div class="card-body">
+                    
+                          <div class="table-responsive">
+                              <table class="table text-sm mb-0 table-striped">
+                                  <thead>
+                                      <tr>
+                                          <th>Employee</th>
+                                          <th>Leave Type</th>
+                                          <th>Remaining Days</th>
+                                          <th>Action</th>
+                                      </tr>
+                                  </thead>
+                                  <tbody>
+                                      {% for leave_balance in leave_balances %}
+                                      <tr>
+                                        <td><strong> <a href="">{{ leave_balance.employee.username }}</a></strong></td> 
+                                          <td>{{ leave_balance.leave_type.name }}</td>
+                                          <td>{{ leave_balance.remaining_days }}</td>
+                                        
+                                        <td>
+                                       
+                                            <form method="post" action="{% url 'delete_leave_balance' leave_balance.id %}">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-danger mt-1">Delete</button>
+                                            </form> 
+                                  
+                                        </td>
+                                        {% empty %}
+                                            No Leaves History!!
+                                      {% endfor %}
+                                      
+                                      </tr>
+                                      
+                                  </tbody>
+                                  </tbody>
+                              </table>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </section>
+    
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+
+{% endblock %}

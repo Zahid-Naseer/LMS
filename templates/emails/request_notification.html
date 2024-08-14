@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ request_type.title }} Request Notification</title>
+</head>
+<body>
+    <h3>{{ request_type.title }} Request Notification</h3>
+    <p>Dear Admin,</p>
+    <p>{{ user.username }} has made a new {{ request_type }} request.</p>
+    <p><strong>Details:</strong></p>
+    <ul>
+        <li>Start Date: {{ request_data.from_date }}</li>
+        <li>End Date: {{ request_data.to_date }}</li>
+        <li>Duration: {{ request_data.duration }} days</li>
+    </ul>
+    <p>Please review and take the necessary action.</p>
+    <p>Thank you,</p>
+    <p>Your Company Name</p>
+</body>
+</html>

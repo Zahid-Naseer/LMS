@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="bg-gray-200 text-sm">
+    <div class="container-fluid">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0 py-3">
+          <li class="breadcrumb-item"><a class="fw-light" href="/dashboard">Home</a></li>
+          <li class="breadcrumb-item active fw-light" aria-current="page">Role</li>
+        </ol>
+      </nav>
+    </div>
+  </div>    
+
+
+  <header class="py-4">
+    <div class="container-fluid py-2">
+      <h1 class="h3 fw-normal mb-0">These are all the Roles have right now</h1>
+    </div>
+  </header>
+
+  <section class="tables">   
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-header border-bottom">
+              <h3 class="h4 mb-0">Roles Table</h3>
+             
+                 <a href="{% url 'new_role' %}" class="btn btn-success mt-1">Add New</a>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table text-sm mb-0 table-striped text-center">
+                  <thead>
+                    <tr>
+                      <th>Role Name</th>
+                    </tr>
+                  </thead>
+                  {% for role in roles %}
+                  <tbody>
+                    <tr>
+                      <td><a href="{% url 'new_role_desc' role.id %}"><strong>{{ role.role_name }}</strong></a></td>
+                      
+                    </tr>
+                  </tbody>
+                {% empty %}
+                    <tr>
+                    <td class="border-bottom-0">No roles to display.</td>
+                    </tr> 
+                {% endfor %}
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+{% endblock %}

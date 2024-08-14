@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+    <div class="bg-gray-200 text-sm">
+      <div class="container-fluid">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb mb-0 py-3">
+            <li class="breadcrumb-item"><a class="fw-light" href="/dashboard">Home</a></li>
+            <li class="breadcrumb-item fw-light" aria-current="page"><a class="fw-light" href="{% url 'employee' %}">Employee</a></li>
+            <li class="breadcrumb-item active fw-light" aria-current="page">Employee register </li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+
+
+    <div class="container mb-3">
+      <div class="row">
+        <div class="col-md-6 mx-auto">
+          <div class="card">
+            <div class="card-body p-5">
+              <header class="text-center mb-5">
+                <h1 class="text-xxl text-gray-400 text-uppercase">Bootstrap<strong class="text-primary">Dashboard</strong></h1>
+                <p class="text-gray-500 fw-light">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud.</p>
+              </header>
+              <form class="login-form" method="post">
+                {% csrf_token %}
+                <div class="row">
+                  <div class="col-lg-7 mx-auto">
+                    <div class="input-material-group mb-3">
+                      <input class="input-material" id="Fullname" type="text" name="Fullname" autocomplete="off" >
+                      <label class="label-material" for="Fullname">Full Name</label>
+                    </div>
+                    <div class="input-material-group mb-4">
+                      <input class="input-material" id="Service" type="text" name="Service" required >
+                      <label class="label-material" for="Service">Designation</label>
+                    </div>
+                    <div class="input-material-group mb-4">
+                      <input class="input-material" id="Email" type="email" name="Email" required >
+                      <label class="label-material" for="Email">Email</label>
+                    </div>
+                  </div>
+                  <div class="col-12 text-center">       
+                    <button class="btn btn-primary"  type="submit">Register and New</button>
+                    <button href="employee" class="btn btn-primary"  type="submit">Register</button>
+                    <a href="register" class=" btn btn-primary mb-3-->">cancel</a>
+                    <!-- This should be submit button but I replaced it with <a> for demo purposes-->
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+{% endblock %}

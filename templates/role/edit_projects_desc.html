@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+  <!-- Breadcrumb-->
+  <div class="bg-gray-200 text-sm">
+    <div class="container-fluid">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0 py-3">
+            <li class="breadcrumb-item"><a class="fw-light" href="/dashboard">Home</a></li>
+            <li class="breadcrumb-item fw-light" aria-current="page"><a class="fw-light" href="{% url 'projects' %}">Project</a> </li>
+            <li class="breadcrumb-item fw-light" aria-current="page"><a class="fw-light" href="{% url 'projects_desc' project.id %}">Project Desc</a></li>
+          <li class="breadcrumb-item active fw-light" aria-current="page">Project Edit</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+
+  <div class="container-fluid">
+  <div class="col-lg-12">
+    <div class="card">
+      <div class="card-header border-bottom">
+        <h3 class="h4 mb-0">{{ project.projectName }}</h3>
+      </div>
+      <div class="card-body">
+        <p class="text-sm">Change your form setting here.</p>
+        <form method="post" action="{% url 'edit_projects_desc' project.id %}">
+            {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label" for="exampleInputEmail1">This time Project name: </label> {{ project.project_name }} <br>
+            <input type="hidden" name="user_id" value="{{ user.id }}">
+             Change it from here:  {{ form.project_name }}
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label" for="id_project_code">The Project Code is: </label>
+            {{ project.project_code }}<br>
+            <label for="id_project_code">Change it from here:</label>
+            {{ form.project_code }}
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" for="exampleInputPassword1">The Customer is : </label> {{project.customer}}<br>
+            Change it from here: {{ form.customer}}
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label"for="exampleInputPassword1">The End User is: </label> {{project.end_user}}<br>
+            Change it from here: {{ form.end_user}}
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="exampleInputPassword1">project_currency : </label> {{project.project_currency}}<br>
+            Change it from here:
+            <select name="currency" id="currency_dropdown">
+              {% if currencies %}
+                  {% for currency_code, currency_name in currencies.items %}
+                      <option value="{{ currency_code }}">{{ currency_name }}</option>
+                  {% endfor %}
+              {% else %}
+                  <option value="">-- No currencies available --</option>
+              {% endif %}
+          </select>
+          </div>
+         
+
+          <div class="mb-3">
+            <label class="form-label" for="exampleInputPassword1">The Currency Rate is : </label> {{project.currency_rate}}<br>
+            Change it from here: {{ form.currency_rate}}
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" for="exampleInputPassword1">The payment terms is : </label> {{project.payment_terms}}<br>
+            change it from here:   {{ form.payment_terms}}
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" for="exampleInputPassword1">The Project Manager is : </label> {{project.project_manager}}<br>
+            Change it from here: {{ form.project_manager}}
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" for="exampleInputPassword1">The Company is : </label> {{project.company}}<br>
+            Change it from here: {{ form.company}}
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" for="exampleInputPassword1">The Address line 1 is : </label> {{project.address_line_1}}<br>
+            Change it from here:{{ form.address_line_1}}
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" for="exampleInputPassword1">The Address line 2 is : </label> {{project.address_line_2}}<br>
+            Change it from here: {{ form.address_line_2}}
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" for="exampleInputPassword1">The Mobile number is : </label> {{project.mobile}}<br>
+            Change it from here: {{ form.mobile}}
+          </div>
+          
+          <div class="mb-3">
+            <label class="form-label" for="exampleInputPassword1">The Email is: </label> {{project.email}}<br>
+            Change it from here: {{ form.email}}
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" for="exampleInputPassword1">The initial SO value is: </label> {{project.initial_so_value}}<br>
+            Change it from here: {{ form.initial_so_value}}
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" for="exampleInputPassword1">The Change Order 1 is: </label> {{project.change_order_1}}<br>
+            Change it from here:  {{ form.change_order_1}}
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" for="exampleInputPassword1">The Change Order 2 is: </label> {{project.change_order_2}}<br>
+            Change it from here: {{ form.change_order_2}}
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" for="exampleInputPassword1">The Change Order 3 is: </label> {{project.change_order_3}}<br>
+            Change it from here: {{ form.change_order_3}}
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" for="exampleInputPassword1">The Change Order 4 is: </label> {{project.change_order_4}}<br>
+            Change it from here: {{ form.change_order_4}}
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" for="exampleInputPassword1">The TotalSO is: </label> {{project.total_so}}<br>
+            Change it from here: {{ form.total_so}}
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" for="exampleInputPassword1">The Bid BOM Price is: </label> {{project.bid_bom_price}}<br>
+            Change it from here: {{ form.bid_bom_price}}
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" for="exampleInputPassword1">The Bid Cogs is: </label> {{project.bid_cogs}}<br>
+            Change it from here:  {{ form.bid_cogs}}
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" for="exampleInputPassword1">The Bid VA is: </label> {{project.bid_va}}<br>
+            Change it from here: {{ form.bid_va}}
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" for="exampleInputPassword1">The Design Cogs is: </label> {{project.design_cogs}}<br>
+            Change it from here: {{ form.design_cogs}}
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" for="exampleInputPassword1">The Design VA is: </label> {{project.design_va}}<br>
+            Change it from here: {{ form.design_va}}
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="exampleInputPassword1">The Running Cogs is : </label> {{project.running_cogs}}<br>
+            Change it from here:  {{ form.running_cogs}}
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="exampleInputPassword1">The Running VA is : </label> {{project.running_va}}<br>
+            Change it from here: {{ form.running_va}}
+          </div>
+         <button class="btn btn-primary"  type="submit">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}

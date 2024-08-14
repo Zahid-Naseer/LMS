@@ -1,0 +1,311 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content%}
+
+<div class="bg-gray-200 text-sm">
+    <div class="container-fluid">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0 py-3">
+          <li class="breadcrumb-item"><a class="fw-light" href="/dashboard">Home</a></li>
+          <li class="breadcrumb-item active fw-light" aria-current="page">Pending Requests</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+
+  
+  {% if notifications %}
+  <ul class="list-group">
+      {% for notification in notifications %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+              {{ notification.message }}
+              <a href="{% url 'mark_notification_seen' notification.pk %}" class="mark-seen">Mark as Seen</a>
+          </li>
+      {% endfor %}
+  </ul>
+{% endif %}
+
+
+<header class="py-4">
+    <div class="container-fluid py-2">
+      <h1 class="h3 fw-normal mb-0">Leave Balances Here:</h1>
+    </div>
+  </header>
+
+  <section class="tables">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header border-bottom ">
+                          <a href="{% url 'apply_leave' %}" class="btn btn-primary mt-1"> Apply for Leave</a>
+                          <a href="{% url 'leave_types' %}" class="btn btn-primary mt-1"> Company Holidays</a>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                          <thead>
+                            <tr>
+                                <th>Leave Type</th>
+                                <th>Days Allocated</th>
+                                <th>Balance</th>
+                                
+                            </tr>
+                        </thead>
+                         <tbody>
+                                {% for item in leave_balance_menu %}
+                                <tr>
+                                    <td>{{ item.leave_type }}</td>
+                                    <td>{{ item.leave_type.max_days_allowed }}</td>
+                                    <td>{{ item.remaining_days }}</td>
+                                    
+
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        
+                      </div>
+                     
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</section>
+
+  <section class="tables">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header border-bottom">
+                        <h3 class="h4 mb-0">Leave Request Pending For Approval</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table text-sm mb-0 table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Employee</th>
+                                        <th>Leave Type</th>
+                                        <th>From Date</th>
+                                        <th>To Date</th>
+                                        <th>Leave Count</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for leave_request in leave_requests %}
+                                    <tr>
+                                      <td><strong> <a href="{% url 'leave_detail' leave_request.pk %}">{{ leave_request.employee.username }}</a></strong></td> 
+                                        <td>{{ leave_request.leave_type.name }}</td>
+                                        <td>{{ leave_request.from_date }}</td>
+                                        <td>{{ leave_request.to_date }}</td>
+                                        <td>{{ leave_request.duration }}</td>
+                                        <td>{{ leave_request.get_status_display }}</td>
+                                        {% if leave_request.status == 'PENDING' and request.user.userprofile.role.full_access %}  <td>
+                                          <a href="{% url 'approve_leave' leave_request.pk %}">Approve</a> |
+                                          <a style="color:red;" href="{% url 'reject_leave' leave_request.pk %}">Declined</a>
+                                      </td>
+                                      {% endif %}
+                                                                  
+                                      {% empty %}
+                                          No Leaves Pending!!
+                                    {% endfor %}
+                                    
+                                    </tr>
+                                    
+                                </tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<br>
+<hr>
+<br>
+<section class="tables">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header border-bottom">
+                        <h3 class="h4 mb-0">Leave Balance Update Request Pending For Approval</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table text-sm mb-0 table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Employee</th>
+                                        <th>Leave Type</th>
+                                        <th>From Date</th>
+                                        <th>To Date</th>
+                                        <th>Leave Count</th>
+                                        <th>Status</th>
+                                        <th>Action</th> 
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for compansation_requests in compansation_request %}
+                                    <tr>
+                                      <td><strong> <a href="{% url 'compansation_detail' compansation_requests.pk %}">{{ compansation_requests.employee.username }}</a></strong></td> 
+                                        <td>{{ compansation_requests.leave_type.name }}</td>
+                                        <td>{{ compansation_requests.from_date }}</td>
+                                        <td>{{ compansation_requests.to_date }}</td>
+                                        <td>{{ compansation_requests.duration }}</td>
+                                        <td>{{ compansation_requests.status }}</td>
+                             
+                                          <td>
+                                          <a href="{% url 'approve_compansation' compansation_requests.pk %}">Approve</a> |
+                                          <a style="color:red;" href="{% url 'reject_compansation' compansation_requests.pk %}">Declined</a>
+                                        </td>
+                                     
+                                      
+                                        <td> <a class="btn btn-success" href="{% url 'edit_compansation_request' compansation_requests.id %}">Edit</a>
+                                            <a class="btn btn-danger" href="{% url 'canceled_compansation' compansation_requests.id %}">Delete</a>
+                                         {% empty %}
+                                             No Leaves Pending!!
+                                       {% endfor %}
+                                    
+                                    </tr>
+                                    
+                                </tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </section>
+<br><br><br>
+
+<section class="tables">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header border-bottom">
+                        <h3 class="h4 mb-0">Leave Request History</h3>
+                    </div>
+                    <div class="card-body">
+                        {% comment %} {% if  request.user.userprofile.role.full_access%}    
+                        <lable>Search Here: </lable>
+                        <input type="text" id="employee-search" placeholder="Search employee">
+                        {% endif %} {% endcomment %}
+                        <div class="table-responsive">
+                            <table class="table text-sm mb-0 table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Employee</th>
+                                        <th>Leave Type</th>
+                                        <th>From Date</th>
+                                        <th>To Date</th>
+                                        <th>Leave Count</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for leave_requests_history in leave_requests_historys %}
+                                    <tr>
+                                      <td><strong> <a href="{% url 'leave_detail' leave_requests_history.pk %}">{{ leave_requests_history.employee.username }}</a></strong></td> 
+                                        <td>{{ leave_requests_history.leave_type.name }}</td>
+                                        <td>{{ leave_requests_history.from_date }}</td>
+                                        <td>{{ leave_requests_history.to_date }}</td>
+                                        <td>{{ leave_requests_history.duration }}</td>
+                                        <td {% if  leave_requests_history.get_status_display == 'Declined'  %} style="color:red;" {% elif leave_requests_history.get_status_display == "Canceled" %} style="color:black;"  {% else %}style="color:green;"  {% endif %}>{{ leave_requests_history.get_status_display }}</td>
+                                      
+                                      <td>
+                                          <form method="post" action="{% url 'delete_leave' leave_requests_history.id %}">
+                                              {% csrf_token %}
+                                              <button type="submit" class="btn btn-danger mt-1">Delete</button>
+                                          </form> 
+                                    
+                                      </td>
+                                      {% empty %}
+                                          No Leaves History!!
+                                    {% endfor %}
+                                    
+                                    </tr>
+                                    
+                                </tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="tables">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header border-bottom">
+                        <h3 class="h4 mb-0">Leave Balance Update Request history</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table text-sm mb-0 table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Employee</th>
+                                        <th>Leave Type</th>
+                                        <th>From Date</th>
+                                        <th>To Date</th>
+                                        <th>Leave Count</th>
+                                        <th>Status</th>
+                                       <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for compansation_request in compansation_request_history %}
+                                    <tr>
+                                      <td><strong> <a href="{% url 'compansation_detail' compansation_request.pk %}">{{ compansation_request.employee.username }}</a></strong></td> 
+                                        <td>{{ compansation_request.leave_type.name }}</td>
+                                        <td>{{ compansation_request.from_date }}</td>
+                                        <td>{{ compansation_request.to_date }}</td>
+                                        <td>{{ compansation_request.duration }}</td>
+                                        <td {% if  compansation_request.status == 'REJECTED'  %} style="color:red;" {% elif compansation_request.status == "CANCELED" %} style="color:black;"  {% else %}style="color:green;"  {% endif %}>{{ compansation_request.status }}</td>
+  
+                                      
+                                      <td>
+                                          <form method="post" action="{% url 'delete_compansation' compansation_request.id %}">
+                                              {% csrf_token %}
+                                              <button type="submit" class="btn btn-danger mt-1">Delete</button>
+                                          </form> 
+                                       
+                                      </td>
+                                      {% empty %}
+                                          No Leaves Pending!! 
+                                    {% endfor %}
+                                    
+                                    </tr>
+                                    
+                                </tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </section>
+
+{% endblock %}

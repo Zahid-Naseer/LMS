@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+      <!-- Breadcrumb-->
+      <div class="bg-gray-200 text-sm">
+        <div class="container-fluid">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0 py-3">
+              <li class="breadcrumb-item"><a class="fw-light" href="dashboard">Home</a></li>
+              <li class="breadcrumb-item active fw-light" aria-current="page">Employee  </li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+      <!-- Page Header-->
+      <header class="py-4">
+        <div class="container-fluid py-2">
+          <h1 class="h3 fw-normal mb-0">These are all the employees in the organization</h1>
+        </div>
+      </header>
+      
+      <section class="tables">   
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="card">
+                <div class="card-header border-bottom">
+                  <h3 class="h4 mb-0">Employee Table</h3>
+                     <a href="{% url 'employee_register' %}" class="btn btn-success mt-1">Add New</a>
+                 
+                </div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table text-sm mb-0 table-striped">
+                      <thead>
+                        <tr>
+                          <th>Name</th>
+                          <th>Email</th>
+                          <th>Designation</th>
+                        </tr>
+                      </thead>
+                      {% for employee in employees %}
+                      <tbody>
+                        <tr>
+                          <td><a href="{% url 'edit_employee_desc' employee.id %}"> <strong>{{ employee.Fullname }}</strong><a> </td>
+                          <td>{{ employee.Email }}</td>
+                          <td>{{ employee.service }}</td>
+                          <td>
+                            <form method="post" action="{% url 'delete_employee' employee.id %}">
+                              {% csrf_token %}
+                              <button type="submit" class="btn btn-danger mt-1">Delete</button>
+                          </form> 
+                          </td>
+                        </tr>
+                      </tbody>
+                    {% empty %}
+                        <tr>
+                        <td class="border-bottom-0">No Employee to display.</td>
+                        </tr> 
+                    {% endfor %}
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+  
+{% endblock  %}

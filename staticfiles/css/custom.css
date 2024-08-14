@@ -1,0 +1,6 @@
+/* your styles go here */
+
+.custom-table th,
+  .custom-table td {
+      margin: 10px; /* Adjust the margin as needed */
+  }

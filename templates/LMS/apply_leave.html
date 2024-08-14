@@ -1,0 +1,235 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content%}
+
+<div class="bg-gray-200 text-sm">
+    <div class="container-fluid">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0 py-3">
+          <li class="breadcrumb-item"><a class="fw-light" href="/dashboard">Home</a></li>
+          <li class="breadcrumb-item active fw-light" aria-current="page">Apply leave</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+
+  <div class="container">  <div class="row">
+    <div class="col-md-8">  <div class="card">
+        <div class="card-header border-bottom">
+          <h3 class="h4 mb-0">Apply for new request (Leave/Balance) </h3>
+        </div>
+        <div class="card-body">
+
+          <form class="login-form" method="post">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-lg-7 mx-auto">
+                    <label class="input-material" style="color:green;" for="request_type">Request Type:</label>
+                    <div class="input-material-group mb-3">
+                        <select class="form-select" id="request_type" style="width:350px; border: black 0.2px solid;" name="request_type" required>
+                            <option value="">--------</option>
+                            <option value="LEAVE" {% if request_type == "LEAVE" %}selected{% endif %}>Leave Request</option>
+                            <option value="COMPENSATION" {% if request_type == "COMPENSATION" %}selected{% endif %}>Balance Update Request</option>
+                        </select>
+                    </div>
+        
+                    <label class="label-material" style="color:green;" for="leave_type">Leave Type: </label>
+                    <div class="input-material-group mb-4">
+                        {{ form.leave_type }}
+                        <style>
+                            select#id_leave_type {
+                                width: 350px;
+                                height:40px;
+                            }
+                        </style>
+                        <small class="danger">
+                            <div class="row">
+                                {% if messages %}
+                                    <ul class="username-error messages">
+                                        {% for message in messages %}
+                                            <li class="message {{ message.tags }} danger">{{ message }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div>
+                        </small>
+                    </div>
+        
+                    <label class="label-material" style="color:green;" for="from_date">From Date: </label>
+                    <div class="input-material-group mb-4">
+                      <input type="date" class="input-material border-success" style="width: 200px;" id="from_date" name="from_date" value="{{ form.from_date.value|date:'Y-m-d' }}">
+                        <small class="danger">
+                            <div class="row">
+                                <ul class="username-error messages">
+                                    <li class="message danger" style="color:red;"><strong>{{ error }}</strong></li>
+                                </ul>
+                            </div>
+                        </small>
+                    </div>
+        
+                    <label class="label-material" style="color:green;" for="to_date">To Date: </label>
+                    <div class="input-material-group mb-4">
+                      <input type="date" class="input-material border-success" style="width: 200px;" id="to_date" name="to_date" value="{{ form.to_date.value|date:'Y-m-d' }}">
+                        <small class="danger">
+                            <div class="row">
+                                <ul class="username-error messages">
+                                    <li class="message danger" style="color:red;"><strong>{{ x }}</strong></li>
+                                </ul>
+                            </div>
+                        </small>
+                    </div>
+        
+                    <label class="label-material" style="color:green;" for="reason">Reason:</label>
+                    <div class="input-material-group mb-4">
+                        {{ form.reason }}
+                    </div>
+                </div>
+                <div class="col-12 text-center">
+                    <button class="btn btn-primary" type="submit">Submit</button>
+                    <a class="btn btn-primary" href="{% url 'apply_leave' %}">Cancel</a>
+                    <a class="btn btn-primary" href="{% url 'leave_list' %}">View Requests</a>
+                </div>
+            </div>
+        </form>
+
+
+          {% comment %} <form method="post">
+            {% csrf_token %}
+            <div class="mb-3 " style="width:130px;">
+              <label class="form-label" for="request_type">Request Type:</label>
+              <select class="form-select" id="request_type" name="request_type" required>
+                <option value="LEAVE">Leave</option>
+                <option value="COMPENSATION">Compensation</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label" for="exampleInputPassword1">Leave Type: </label><BR>
+              {{ form.leave_type }}
+              <small class="danger">
+                <div class="row">
+                  {% if messages %}
+                    <ul class="username-error messages">
+                      {% for message in messages %}
+                        <li class="message {{ message.tags }} danger">{{ message }}</li>
+                      {% endfor %}
+                    </ul>
+                  {% endif %}
+                </div>
+              </small>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label" for="exampleInputPassword1">From Date: </label>
+              <input type="date" class="form-control border-success" style="width: 200px;" id="from_date" name="from_date" value="{{ form.from_date }}">
+            </div>
+            <small class="danger">
+              <div class="row">
+                <ul class="username-error messages">
+                  <li class="message danger" style="color:red;"><strong>{{ error }}</strong></li>
+                </ul>
+              </div>
+            </small>
+
+            <div class="mb-3">
+              <label class="form-label" for="exampleInputPassword1">To Date: </label>
+              <input type="date" class="form-control border-success" style="width: 200px;" id="to_date" name="to_date" value="{{ form.to_date }}">
+            </div>
+            <small class="danger">
+              <div class="row">
+                <ul class="username-error messages">
+                  <li class="message danger" style="color:red;"><strong>{{ x }}</strong></li>
+                </ul>
+              </div>
+            </small>
+
+            <div class="mb-3">
+              <label class="form-label" for="exampleInputPassword1">Reason: </label><BR>
+              {{ form.reason}}
+            </div>
+
+            <button class="btn btn-primary" type="submit">Submit</button>
+            <a class="btn btn-primary" href="{% url 'apply_leave' %}">Cancel</a>
+          </form> {% endcomment %}
+        </div>
+      </div>
+    </div>
+              {% comment %} <div class="vl">
+                
+              </div> {% endcomment %}
+           
+               <!--Leave avalibily status-->
+               <div class="col-md-4">
+                <section class="tables">
+                  <div class="card">
+                    <div class="card-header border-bottom">
+                      <h3 class="h4 mb-0">My Leaves</h3>
+                    </div>
+                    <div class="card-body">
+                      <div class="table-responsive">
+                        <table class="table table-bordered">
+                          <thead>
+                            <tr>
+                              <th>Leave Type</th>
+                              <th>Balance</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {% for item in leave_balance_data %}
+                            <tr>
+                              <td>{{ item.leave_type }}</td>
+                              <td>{{ item.remaining_days }}</td>
+                            </tr>
+                            {% endfor %}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+          
+                {% comment %} <section class="tables">
+                  {% if user.userprofile.role.full_access %}
+                  <a href="{% url 'reset_balances' %}" id="reset-balances-btn" class="btn btn-danger mt-1">Reset all Balances</a>
+                  {% endif %}
+                </section> {% endcomment %}
+          
+                <section class="tables">
+                  <div class="card">
+                    <div class="card-header border-bottom">
+                      <h3 class="h4 mb-0">Company Holidays</h3>
+                    </div>
+                    <div class="card-body">
+                      <div class="table-responsive">
+                        <table class="table text-sm mb-0 table-striped">
+                          <thead>
+                            <tr>
+                              <th>Description</th>
+                              <th>Date</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {% for holiday in holidays %}
+                            <tr>
+                              <td>{{ holiday.name }}</td>
+                              <td>{{ holiday.date }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                              <td colspan="3" class="text-center">No Holidays declared yet!!</td>
+                            </tr>
+                            {% endfor %}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+              </div>
+            </div>
+          </div>
+{% endblock %}
+
+
+

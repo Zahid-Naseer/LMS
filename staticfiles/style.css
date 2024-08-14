@@ -1,0 +1,109 @@
+/* Reset default margin and padding for all elements */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Apply styles to the body */
+body {
+    font-family: Arial, sans-serif;
+}
+
+/* Style the header */
+header {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+}
+
+/* Style the header text */
+header h1 {
+    font-size: 28px;
+}
+
+/* Style the main content area */
+main {
+    text-align: center;
+    padding: 20px;
+}
+
+/* Style the button container */
+.button-container {
+    display: flex;
+    justify-content: center;
+}
+
+/* Style the main buttons */
+.main-button {
+    display: inline-block;
+    padding: 15px 30px;
+    background-color: black;
+    color: #fff;
+    text-decoration: none;
+    font-size: 18px;
+    margin: 10px;
+    border-radius: 5px;
+}
+
+/* Change button color on hover */
+.main-button:hover {
+    background-color: #b38900dc;
+    color : black;
+    text-decoration: none;
+}
+
+/* Style the footer */
+footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+}
+
+/* Responsive design for small screens */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 24px;
+    }
+    .main-button {
+        font-size: 16px;
+    }
+}
+
+
+.container {
+    max-width: 300px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+h2 {
+    text-align: center;
+}
+
+form {
+    text-align: center;
+}
+
+button {
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+a {
+    text-decoration: none;
+}
+

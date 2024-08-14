@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+  <style>
+    .table th, .table td {
+      text-align: center;
+    }
+    
+    .table-responsive {
+      overflow-x: auto;
+    }
+  </style>  
+
+    <div class="bg-gray-200 text-sm">
+      <div class="container-fluid">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb mb-0 py-3">
+            <li class="breadcrumb-item"><a class="fw-light" href="/dashboard">Home</a></li>
+            <li class="breadcrumb-item fw-light" aria-current="page"><a class="fw-light" href="{% url 'role' %}">Role</a></li>
+            <li class="breadcrumb-item active fw-light" aria-current="page">New Role  </li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+
+    <div class="container mb-3">
+      <div class="row">
+        <div class="col-md-8 mx-auto">
+          <div class="card">
+            <div class="card-body p-5">
+              <header class="text-center mb-5">
+                <h1 class="text-xxl text-gray-400 text-uppercase">Register<strong class="text-primary">-New Role Here</strong></h1>
+                <p class="text-gray-500 fw-light">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud.</p>
+              </header>
+              <form class="login-form" method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                  <label for="role_name" class="form-label"><strong>Role Name</strong></label>
+                  <input type="text" class="form-control" id="role_name" name="role_name" placeholder="Enter Role Name">
+                </div>
+              
+                <div class="table-responsive">
+                  <table class="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th></th>
+                        <th>View</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    
+                      <tr>
+                        <th>User</th>
+                        <td><input type="checkbox" name="user"></td>
+                      </tr>
+                      <tr>
+                        <th>Admin</th>
+                        <td><input type="checkbox" name="full_access"></td>
+                      </tr>
+                      <tr>
+                        <th>Super Admin</th>
+                        <td><input type="checkbox" name="super_admin" ></td>
+                        
+                        </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="col-12 text-center mt-3">       
+                  <button class="btn btn-primary" type="submit">Create Role</button>
+                  <a href="new_role" class="btn btn-primary">Cancel</a>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<!-- Add this script in the head or before the closing body tag of your HTML -->
+
+
+
+
+{% endblock %}

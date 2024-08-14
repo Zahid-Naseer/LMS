@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    
+
+    <div class="bg-gray-200 text-sm">
+        <div class="container-fluid">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0 py-3">
+            <li class="breadcrumb-item"><a class="fw-light" href="/dashboard">Home</a></li>
+            <li class="breadcrumb-item fw-light" aria-current="page"><a class="fw-light" href="{% url 'users' %}">Users pages</a> </li>
+            <li class="breadcrumb-item active fw-light" aria-current="page"><a class="fw-light" href="{% url 'edit_users_desc' user.id %}">user Desc</a> </li>
+            <li class="breadcrumb-item active fw-light" aria-current="page">user Edit</li>
+            </ol>
+        </nav>
+        </div>
+    </div>
+
+
+    <div class="container-fluid">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header border-bottom">
+                <h3 class="h4 mb-0">{{ user.username }}</h3>
+                </div>
+                <div class="card-body">
+                <p class="text-sm">Change your form setting here.</p>
+                <form method="post" action="">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                    <label class="form-label" for="exampleInputEmail1">This time username is : </label> {{ user.username }} <br>
+                    <input type="text" name="user" value="{{ form.username }}">
+                  
+                   
+                    <div class="mb-3">
+                    <label class="form-label" for="exampleInputPassword1">This time user's role is : </label> {{user.userprofile.role}}<br>
+                    {{ form.role }}
+                    <small class="danger">
+                        <div class="row">
+                            <ul class="username-error messages">
+                                <li class="message danger" style="color:red;"><strong>{{ error_message }}</strong></li>
+                            </ul>
+                        </div>
+                    </small>
+                    </div>
+              
+              
+                    
+                    <button class="btn btn-primary" type="submit">Submit</button>
+                </form>
+                </div>
+            </div>
+        </div>
+      </div>
+
+
+{% endblock %}

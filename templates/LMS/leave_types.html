@@ -1,0 +1,392 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content%}
+
+<div class="bg-gray-200 text-sm">
+    <div class="container-fluid">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0 py-3">
+          <li class="breadcrumb-item"><a class="fw-light" href="/dashboard">Home</a></li>
+          <li class="breadcrumb-item active fw-light" aria-current="page">Leave Types</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+
+{% if user.userprofile.role.full_access or request.user.userprofile.role.super_admin %}
+
+<section class="tables">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header border-bottom">
+                        <h3 class="h4 mb-0">Leaves</h3>
+                        {% if user.userprofile.role.full_access or request.user.userprofile.role.super_admin %}
+                            <button id="addNewLeave" class="btn btn-success mt-1">Add New</button>
+                        {% endif %}
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" action="{% url 'leave_types' %}">
+                            {% csrf_token %}
+                            <div class="table-responsive">
+                                <table class="table text-sm mb-0 table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Leave Type</th>
+                                            <th>Leave Count</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="leaveTableBody">
+                                        {% for leave_type in leave_types %}
+                                        <tr>
+                                            <td>
+                                                <input type="text" name="leave_type_{{ leave_type.pk }}" value="{{ leave_type.name }}" class="form-control" />
+                                            </td>
+                                            <td>
+                                                <input type="number" name="leave_count_{{ leave_type.pk }}" value="{{ leave_type.max_days_allowed }}" class="form-control" />
+                                            </td>
+                                            <td>
+                                                <button type="submit" name="save_leave" value="{{ leave_type.pk }}" class="btn btn-success mt-1">Save</button>
+                                                <a href="{% url 'leave_types' %}" class="btn btn-danger mt-1">Cancel</a>
+                                            </td>
+                                            <td>
+                                                <form method="post" action="{% url 'delete_leave_type' leave_type.id %}" style="display:inline;">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-danger mt-1">Delete</button>
+                                            </form>
+                                         </td>
+                                        </tr>
+                                        {% empty %}
+                                        <tr>
+                                            <td colspan="3" class="text-center">No Leaves Declared yet!!</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="tables">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header border-bottom">
+                        <h3 class="h4 mb-0">Holidays</h3>
+                            <button id="addNewHoliday" class="btn btn-success mt-1">Add New</button>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" action="{% url 'leave_types' %}">
+                            {% csrf_token %}
+                            <div class="table-responsive">
+                                <table class="table text-sm mb-0 table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Description</th>
+                                            <th>Date</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="holidayTableBody">
+                                        {% for holiday in holidays %}
+                                        <tr>
+                                            <td>
+                                                <input type="text" name="holiday_description_{{ holiday.id }}" value="{{ holiday.name }}" class="form-control" />
+                                            </td>
+                                            <td>
+                                                <input type="date" name="holiday_date_{{ holiday.id }}" value="{{ holiday.date|date:"Y-m-d" }}" class="form-control" />
+                                            </td>
+                                            <td>
+                                                <button type="submit" name="save_holiday" value="{{ holiday.id }}" class="btn btn-success ">Save</button>
+                                                <a href="{% url 'leave_types' %}" class="btn btn-danger ">Cancel</a>
+                                            </td>
+                                            <td>
+                                               
+                                                    <form method="post" action="{% url 'delete_holiday' holiday.id %}" style="display:inline;">
+                                                        {% csrf_token %}
+                                                        <button type="submit" class="btn btn-danger mt-1">Delete</button>
+                                                    </form>
+                                             
+                                            </td>
+                                        </tr>
+                                        {% empty %}
+                                        <tr>
+                                            <td colspan="4" class="text-center">No Holidays declared yet!!</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="tables">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header border-bottom">
+                        <h3 class="h4 mb-0">Reset Leave Balances</h3>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" action="{% url 'reset_balances' %}" onsubmit="return confirmReset();">
+                            {% csrf_token %}
+                            <div class="table-responsive">
+                                <table class="table text-sm mb-0 table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Leave Type</th>
+                                            <th>Carry Forward Days</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <select name="leave_type" class="form-control">
+                                                    {% for leave_type in leave_types %}
+                                                        <option value="{{ leave_type.id }}" {% if leave_type.id|stringformat:"s" == last_leave_type_id|stringformat:"s" %}selected{% endif %}>
+                                                            {{ leave_type.name }}
+                                                        </option>
+                                                    {% endfor %}
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <input type="number" name="additional_days" class="form-control" value="{{ last_additional_days }}" required />
+                                            </td>
+                                            <td>
+                                                <button type="submit" class="btn btn-success">Reset Balances</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </form>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="tables">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header border-bottom">
+                        <h3 class="h4 mb-0">Updated Leave Balance Days Expiry</h3>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" action="{% url 'update_compensation_days' %}">
+                            {% csrf_token %}
+                            <div class="table-responsive">
+                                <table class="table text-sm mb-0 table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Max Compensation Days</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <input type="number" name="max_com_days" class="form-control" value="{{ max_compansation_days }}" required />
+                                            </td>
+                                            <td>
+                                                <button type="submit" class="btn btn-success">Save</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+document.getElementById('addNewLeave').addEventListener('click', function() {
+    var tableBody = document.getElementById('leaveTableBody');
+    var newRow = document.createElement('tr');
+    newRow.innerHTML = `
+        <td><input type="text" name="new_leave_type" class="form-control" /></td>
+        <td><input type="number" name="new_leave_count" class="form-control" /></td>
+        <td><button type="submit" name="add_leave" class="btn btn-success mt-1">Save</button>
+        <a href="{% url 'leave_types' %}"  class="btn btn-danger mt-1">Cancel</a></td>
+        `;
+    tableBody.appendChild(newRow);
+});
+
+document.getElementById('addNewHoliday').addEventListener('click', function() {
+    var tableBody = document.getElementById('holidayTableBody');
+    var newRow = document.createElement('tr');
+    newRow.innerHTML = `
+        <td><input type="text" name="new_holiday_description" class="form-control" /></td>
+        <td><input type="date" name="new_holiday_date" class="form-control" /></td>
+        <td><button type="submit" name="add_holiday" class="btn btn-success mt-1">Save</button>
+        <a href="{% url 'leave_types' %}"  class="btn btn-danger mt-1">Cancel</a></td>
+    `;
+    tableBody.appendChild(newRow);
+});
+</script>
+
+<script>
+    function confirmReset() {
+        return confirm("Are you sure you want to reset leave balances of all employees?");
+    }
+    </script>
+
+{% comment %} <script>
+  const resetBalancesBtn = document.getElementById('reset-balances-btn');
+
+  if (resetBalancesBtn) {
+    resetBalancesBtn.addEventListener('click', function(event) {
+      event.preventDefault(); // Prevent default link behavior
+  
+      // Create confirmation popup content
+      const confirmation = document.createElement('div');
+      confirmation.classList.add('confirmation-popup');
+      confirmation.innerHTML = `
+        <h2>Are you sure you want to reset all leave balances?</h2>
+        <button class="btn btn-danger yes-btn">Yes</button>
+        <button class="btn btn-success no-btn">No</button>
+      `;
+  
+      // Append popup to the body and show it
+      document.body.appendChild(confirmation);
+      confirmation.style.display = 'block'; // Alternative to fadeIn
+  
+      // Handle button clicks inside the popup
+      confirmation.addEventListener('click', function(event) {
+        if (event.target.classList.contains('yes-btn')) {
+          // Submit the actual reset link (using a form or redirect)
+          window.location.href = "{% url 'reset_balances' %}";
+          confirmation.remove(); // Remove popup after confirmation
+        } else if (event.target.classList.contains('no-btn')) {
+          confirmation.remove(); // Remove popup on canceling
+        }
+      });
+    });
+  }
+</script> {% endcomment %}
+{% else %}
+<section class="tables">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header border-bottom">
+                        <h3 class="h4 mb-0">Leaves</h3>
+                       
+                            <a href="{% url 'newLeaveType' %}" class="btn btn-success mt-1">Add New</a>
+                      
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table text-sm mb-0 table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Leave Type</th>
+                                        <th>Leave Count</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for leave_type in leave_types %}
+                                    <tr>    
+                                      <td> <a href="{% url 'leave_types_detail' leave_type.pk %}">{{ leave_type.name }}</a></td> 
+                                      <td> {{ leave_type.max_days_allowed }} </td>
+                                      {% empty %}
+                                          No Leaves Declare yet!!
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="tables">
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header border-bottom">
+                    <h3 class="h4 mb-0">Holidays</h3>
+                 
+                        <a href="{% url 'newHoliday' %}" class="btn btn-success mt-1">Add New</a>
+                 
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table text-sm mb-0 table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Description</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for holiday in holidays %}
+                                <tr>
+                                    <td>{{ holiday.name }}</td>
+                                    <td>{{ holiday.date }}</td>
+                                    <td>
+                                        {% if user.userprofile.role.full_access %}
+                                        <a href="{% url 'edit_holiday' holiday.id %}" class="btn btn-success mt-1">Edit</a>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if request.user.userprofile.role.full_access %}
+                                           <form method="post" action="{% url 'delete_holiday' holiday.id %}">
+                                               {% csrf_token %}
+                                               <button type="submit" class="btn btn-danger mt-1">Delete</button>
+                                           </form> 
+                                         {% endif %}
+                                       </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="5" class="text-center">No Holidays desclared yet!!</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</section>
+{% endif %}
+
+ 
+
+
+
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+    <div class="bg-gray-200 text-sm">
+      <div class="container-fluid">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb mb-0 py-3">
+            <li class="breadcrumb-item"><a class="fw-light" href="/dashboard">Home</a></li>
+            <li class="breadcrumb-item fw-light" aria-current="page"><a class="fw-light" href="{% url 'users' %}">Users</a></li>
+            <li class="breadcrumb-item active fw-light" aria-current="page">User register </li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+    {% comment %} {% if messages %}
+      <ul class="messages">
+          {% for message in messages %}
+              <li class="message {{ message.tags }}">{{ message }}</li>
+          {% endfor %}
+      </ul>
+    {% endif %} {% endcomment %}
+
+
+      <br><br>
+
+    <div class="container mb-3">
+      <div class="row">
+        <div class="col-md-6 mx-auto">
+          <div class="card">
+            <div class="card-body p-5">
+              <header class="text-center mb-5">
+                <h1 class="text-xxl text-gray-400 text-uppercase">Register<strong class="text-primary">-New User Here</strong></h1>
+                <p class="text-gray-500 fw-light">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud.</p>
+              </header>
+              <form class="login-form" method="post">
+                {% csrf_token %}
+                <div class="row">
+                  <div class="col-lg-7 mx-auto">
+                    <div class="input-material-group mb-3">
+                      {{ form.username.label_tag }}
+                       {{ form.username }}
+                       {% if messages %}
+                          <ul class="username-error messages">
+                              {% for message in messages %}
+                                  <li class="message {{ message.tags }}">{{ message }}</li>
+                              {% endfor %}
+                          </ul>
+                        {% endif %}
+                        </div>
+                    <div class="input-material-group mb-4">
+                      {{ form.password.label_tag }}
+                      {{ form.password }}
+                    </div>
+                    
+                    <div class="input-material-group mb-4">
+                      {{ form.employeeID.label_tag }}
+                      {{ form.employeeID }} 
+                    </div>
+                    <div class="input-material-group mb-4">
+                      {{ form.role.label_tag  }}
+                      {{ form.role }}
+                      <small class="danger">
+                        <div class="row">
+                            <ul class="username-error messages">
+                                <li class="message danger" style="color:red;"><strong>{{ error_message }}</strong></li>
+                            </ul>
+                        </div>
+                    </small>
+                    
+                    </div>
+                  </div>
+                  <div class="col-12 text-center">       
+                    <button class="btn btn-primary"  type="submit">Register User</button>
+                    <a href="register" class=" btn btn-primary">cancel</a>
+                    <!-- This should be submit button but I replaced it with <a> for demo purposes-->
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+   
+
+
+{% endblock %}

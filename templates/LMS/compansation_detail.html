@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content%}
+
+<div class="bg-gray-200 text-sm">
+    <div class="container-fluid">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0 py-3">
+          <li class="breadcrumb-item"><a class="fw-light" href="/dashboard">Home</a></li>
+          <li class="breadcrumb-item"><a class="fw-light" href="{% url 'leave_list' %}">Leave List</a></li>
+          <li class="breadcrumb-item active fw-light" aria-current="page">Compansation Details</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+
+  <section class="tables">
+    <div class="container-fluid">
+        <div class="row">
+          <div class="container-fluid">
+            <div class="col-lg-12">
+              <div class="card">
+                <div class="card-header border-bottom text-sm-end">
+                  
+          
+                </div>
+                <div class="card-body">
+                  <p class="text-sm">These are Compansation Details.</p>
+                  <h1>Compensation Request Details :</h1>
+                  {% if leave_request %}
+                  <p>Employee: {{ leave_request.employee.username }}</p>
+                  <p>Leave Type: {{ leave_request.leave_type.name }}</p>
+                  <p>From Date: {{ leave_request.from_date }}</p>
+                  <p>To Date: {{ leave_request.to_date }}</p>
+                  <p>Reason: {{ leave_request.reason }}</p>
+                  <p>Status: {{ leave_request.get_status_display }}</p>
+                  <p>Date: {{ leave_request.used_date }}</p>
+                  {% endif %}
+
+
+                </div>
+             </div>  
+            </div>
+          </div>
+        </section>          
+
+ {% endblock %} 

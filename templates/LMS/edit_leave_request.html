@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content%}
+
+<div class="bg-gray-200 text-sm">
+    <div class="container-fluid">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0 py-3">
+          <li class="breadcrumb-item"><a class="fw-light" href="/dashboard">Home</a></li>
+          <li class="breadcrumb-item"><a class="fw-light" href="{% url 'leave_list'  %}">Leave List</a></li>
+          <li class="breadcrumb-item active fw-light" aria-current="page">Edit Leave request Details</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+
+  <div class="container-fluid">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-header border-bottom">
+          <h3 class="h4 mb-0">{{ leave_request.Name }}</h3>
+        </div>
+        <div class="card-body">
+          <p class="text-sm">Change your form setting here.</p>
+          <form method="post" action="">
+              {% csrf_token %}
+
+              <div class="mb-3">
+                <label class="form-label" for="exampleInputEmail1">This time Leave Type: </label> {{ leave_request.leave_type.name }} <br>
+                 Change it from here:  {{ form.leave_type }}
+              </div>   
+
+              <div class="mb-3">
+                <label class="form-label" for="exampleInputEmail1">This time Start Date: </label> {{ leave_request.from_date }} <br>
+                <input type="date" name="from_date"  value="{{ form.from_date }}" />
+                <small class="danger">
+                  <div class="row">
+                    {% if messages %}
+                      <ul class="username-error messages">
+                        {% for message in messages %}
+                          <li class="message {{ message.tags }} danger">{{ message }}</li>
+                        {% endfor %}
+                      </ul>
+                    {% endif %}
+                  </div>
+                </small>
+              </div>   
+              
+              <div class="mb-3">
+                <label class="form-label" for="exampleInputEmail1">This time End Date: </label> {{ leave_request.to_date }} <br>
+
+                <input type="date" name="to_date"  value="{{ form.to_date }}" />
+                <small class="danger">
+                  <div class="row">
+                    <ul class="username-error messages">
+                      <li class="message danger" style="color:red;"><strong>{{ x }}</strong></li>
+                    </ul>
+                  </div>
+                </small>
+              </div>   
+          
+              <div class="mb-3">
+                <label class="form-label" for="exampleInputEmail1">This time End Date: </label> {{ leave_request.reason }} <br>
+                 Change it from here:  {{ form.reason }}
+              </div>   
+              
+             
+              
+              <button class="btn btn-primary"  type="submit">Submit</button>
+            </form>
+          </div>
+        </div>
+      </div>  
+
+{% endblock %}
