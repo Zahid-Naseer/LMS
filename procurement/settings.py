@@ -56,7 +56,6 @@ MIDDLEWARE = [
 ]
 
 SESSION_COOKIE_AGE = 60 * 60 * 24 * 7  # One week in seconds
-SESSION_EXPIRE_AT_BROWSER_CLOSE = False 
 
 ROOT_URLCONF = 'procurement.urls'
 
@@ -155,4 +154,23 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'zahid.solutions.net@gmail.com'  # Your Gmail address
-EMAIL_HOST_PASSWORD = 'mail@123'  
+EMAIL_HOST_PASSWORD = 'owwhylokpessdjqs'  
+
+
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {
+            'min_length': 3,
+        },
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+]

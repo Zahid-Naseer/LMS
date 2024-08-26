@@ -172,6 +172,7 @@
                           <thead>
                             <tr>
                               <th>Leave Type</th>
+                              <th>Days Allocated</th>
                               <th>Balance</th>
                             </tr>
                           </thead>
@@ -179,6 +180,7 @@
                             {% for item in leave_balance_data %}
                             <tr>
                               <td>{{ item.leave_type }}</td>
+                              <td>{{ item.leave_type.max_days_allowed }}</td>
                               <td>{{ item.remaining_days }}</td>
                             </tr>
                             {% endfor %}

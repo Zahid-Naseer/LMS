@@ -14,17 +14,6 @@
     </div>
   </div>
 
-  
-  {% if notifications %}
-  <ul class="list-group">
-      {% for notification in notifications %}
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-              {{ notification.message }}
-              <a href="{% url 'mark_notification_seen' notification.pk %}" class="mark-seen">Mark as Seen</a>
-          </li>
-      {% endfor %}
-  </ul>
-{% endif %}
 
 
 <header class="py-4">
@@ -106,11 +95,11 @@
                                         <td>{{ leave_request.to_date }}</td>
                                         <td>{{ leave_request.duration }}</td>
                                         <td>{{ leave_request.get_status_display }}</td>
-                                        {% if leave_request.status == 'PENDING' and request.user.userprofile.role.full_access %}  <td>
+                                        <td>
                                           <a href="{% url 'approve_leave' leave_request.pk %}">Approve</a> |
                                           <a style="color:red;" href="{% url 'reject_leave' leave_request.pk %}">Declined</a>
                                       </td>
-                                      {% endif %}
+                                     
                                                                   
                                       {% empty %}
                                           No Leaves Pending!!
@@ -170,8 +159,7 @@
                                         </td>
                                      
                                       
-                                        <td> <a class="btn btn-success" href="{% url 'edit_compansation_request' compansation_requests.id %}">Edit</a>
-                                            <a class="btn btn-danger" href="{% url 'canceled_compansation' compansation_requests.id %}">Delete</a>
+                                       
                                          {% empty %}
                                              No Leaves Pending!!
                                        {% endfor %}
@@ -285,11 +273,8 @@
   
                                       
                                       <td>
-                                          <form method="post" action="{% url 'delete_compansation' compansation_request.id %}">
-                                              {% csrf_token %}
-                                              <button type="submit" class="btn btn-danger mt-1">Delete</button>
-                                          </form> 
-                                       
+                                        <a class="btn btn-danger mt-1" href="{% url 'delete_compansation' compansation_request.id %}" >Delete</a>
+                                        
                                       </td>
                                       {% empty %}
                                           No Leaves Pending!! 

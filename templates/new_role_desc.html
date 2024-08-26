@@ -2,7 +2,13 @@
 {% load static %}
 
 {% block content %}
-
+<style>
+  .element {
+    max-width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+  }
+</style>
     <div class="bg-gray-200 text-sm">
         <div class="container-fluid">
         <nav aria-label="breadcrumb">
@@ -14,7 +20,16 @@
         </nav>
         </div>
     </div>
-
+    <br>
+      <div class="element">
+        <small class="danger ">
+          <div class="row ">
+              <ul class="username-error messages">
+                  <li class="message danger test-centre" style="color:red; font-size:15px;"><strong>{{ error_message }}</strong></li>
+              </ul>
+          </div>
+      </small>
+    </div>
     <header class="py-4">
         <div class="container-fluid py-2">
           <h1 class="h3 fw-normal mb-0">This is the Role Description</h1>

@@ -10,13 +10,20 @@ class RoleForm(forms.ModelForm):
         fields = '__all__'
         
         
-class CustomUserChangeForm(UserChangeForm):
+class CustomUserChangeForm(forms.ModelForm):
+    username = forms.CharField(max_length=150, required=True)
     employeeID = forms.CharField(max_length=150, required=False)
     role = forms.ModelChoiceField(queryset=Role.objects.all())
 
     class Meta:
         model = UserProfile
-        fields = ('user' , 'role' , 'employeeID')  
+        fields = ['employeeID', 'role']
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        if user:
+            self.fields['username'].initial = user.username
         
 class CustomEmployeeChangeForm(UserChangeForm):
     username = forms.CharField(max_length=150, required=False)

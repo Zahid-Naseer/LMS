@@ -1,8 +1,144 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block content%}
-    
+{% block content %}
 
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+    fieldset {
+        margin-bottom: 20px;
+        border: none;
+    }
+    label {
+        font-weight: bold;
+    }
+    input {
+        margin-bottom: 10px;
+        padding: 5px;
+        width: calc(100% - 40px); /* Adjust width for eye icon */
+    }
+    .password-container {
+        position: relative;
+    }
+    .toggle-password {
+        position: absolute;
+        right: 10px;
+        top: 5px;
+        cursor: pointer;
+        color: #888;
+    }
+    button {
+        padding: 10px 15px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+    button:hover {
+        background-color: #45a049;
+    }
+    .errorlist {
+        color: red;
+    }
+    .message {
+        color: green;
+    }
+    .message.error {
+        color: red;
+    }
+</style>
+
+<div class="bg-gray-200 text-sm">
+    <div class="container-fluid">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0 py-3">
+                <li class="breadcrumb-item"><a class="fw-light" href="/dashboard">Home</a></li>
+                <li class="breadcrumb-item fw-light" aria-current="page">Profile</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<div class="container mb-3">
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            <div class="card">
+                <div class="card-body p-5">
+                    <h1>Profile Information</h1>
+                   
+                        <fieldset disabled="disabled">
+                            <label>Username: </label>
+                            <input type="text" value="{{ user_profile.user.username }}"><br>
+                            <label>Full Name: </label>
+                            <input type="text" value="{{ user_profile.employeeID.Fullname }}"><br>
+                            <label>Email: </label>
+                            <input type="email" value="{{ user_profile.employeeID.Email }}"><br>
+                            <label>Role: </label>
+                            <input type="text" value="{{ user_profile.role }}"><br>
+                            <label>Designation: </label>
+                            <input type="text" value="{{ user_profile.employeeID.service }}"><br>
+                        </fieldset>
+
+                        <h2>Change Password</h2>
+                              
+                               
+                        <form method="POST">
+                            {% csrf_token %}         
+
+                        <div class="password-container">
+                            {{ password_form.old_password.label_tag }}<br>
+                            {{ password_form.old_password }}
+                            <span class="toggle-password" onclick="togglePassword('id_old_password')">👁️</span>
+                            <small class="danger">
+                                <div class="row">
+                                    <ul class="username-error messages">
+                                        <li class="message danger" style="color:red;"><strong>{{ old_password_error }}</strong></li>
+                                    </ul>
+                                </div>
+                            </small>
+                        </div>
+                        
+
+                        <div class="password-container">
+                            {{ password_form.new_password1.label_tag }}<br>
+                            {{ password_form.new_password1 }}
+                            <span class="toggle-password" onclick="togglePassword('id_new_password1')">👁️</span>
+                            {% if password_form.new_password1.errors %}
+                                <ul class="errorlist">
+                                    {% for error in password_form.new_password1.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="password-container">
+                            {{ password_form.new_password2.label_tag }}<br>
+                            {{ password_form.new_password2 }}
+                            <span class="toggle-password" onclick="togglePassword('id_new_password2')">👁️</span>
+                            {% if password_form.new_password2.errors %}
+                            <ul class="errorlist">
+                                {% for error in password_form.new_password2.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                        </div>
+
+                        <button type="submit">Change Password</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function togglePassword(fieldId) {
+        const passwordField = document.getElementById(fieldId);
+        const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordField.setAttribute('type', type);
+    }
+</script>
 
 {% endblock %}

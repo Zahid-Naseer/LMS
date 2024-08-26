@@ -160,14 +160,17 @@
                                             <td>
                                                 <select name="leave_type" class="form-control">
                                                     {% for leave_type in leave_types %}
-                                                        <option value="{{ leave_type.id }}" {% if leave_type.id|stringformat:"s" == last_leave_type_id|stringformat:"s" %}selected{% endif %}>
+                                                        <option value="{{ leave_type.id }}" 
+                                                            {% if last_additional_days and leave_type.id == last_additional_days.leave_type.id %}
+                                                                selected
+                                                            {% endif %}>
                                                             {{ leave_type.name }}
                                                         </option>
                                                     {% endfor %}
                                                 </select>
                                             </td>
                                             <td>
-                                                <input type="number" name="additional_days" class="form-control" value="{{ last_additional_days }}" required />
+                                                <input type="number" name="additional_days" class="form-control" value="{{ last_additional_days.carry_forward_days|default:'' }}" required />
                                             </td>
                                             <td>
                                                 <button type="submit" class="btn btn-success">Reset Balances</button>
@@ -298,7 +301,7 @@ document.getElementById('addNewHoliday').addEventListener('click', function() {
                     <div class="card-header border-bottom">
                         <h3 class="h4 mb-0">Leaves</h3>
                        
-                            <a href="{% url 'newLeaveType' %}" class="btn btn-success mt-1">Add New</a>
+                            {% comment %} <a href="{% url 'newLeaveType' %}" class="btn btn-success mt-1">Add New</a> {% endcomment %}
                       
                     </div>
                     <div class="card-body">
@@ -313,7 +316,7 @@ document.getElementById('addNewHoliday').addEventListener('click', function() {
                                 <tbody>
                                     {% for leave_type in leave_types %}
                                     <tr>    
-                                      <td> <a href="{% url 'leave_types_detail' leave_type.pk %}">{{ leave_type.name }}</a></td> 
+                                      <td> {{ leave_type.name }}</td> 
                                       <td> {{ leave_type.max_days_allowed }} </td>
                                       {% empty %}
                                           No Leaves Declare yet!!
@@ -338,7 +341,7 @@ document.getElementById('addNewHoliday').addEventListener('click', function() {
                 <div class="card-header border-bottom">
                     <h3 class="h4 mb-0">Holidays</h3>
                  
-                        <a href="{% url 'newHoliday' %}" class="btn btn-success mt-1">Add New</a>
+                        {% comment %} <a href="{% url 'newHoliday' %}" class="btn btn-success mt-1">Add New</a> {% endcomment %}
                  
                 </div>
                 <div class="card-body">

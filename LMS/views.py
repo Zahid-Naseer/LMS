@@ -12,7 +12,7 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.http import JsonResponse
 from django import template
-
+from django.conf import settings
 
 @login_required
 def apply_leave(request):
@@ -44,7 +44,7 @@ def apply_leave(request):
                         leave_request.save()
 
                         # Send email notification to admins
-                       # send_notification_email(request.user, leave_request, request_type)
+                        send_notification_email(request.user, leave_request, request_type)
 
                         return redirect('apply_leave')
                     else:
@@ -72,7 +72,7 @@ def apply_leave(request):
                         data.save()
 
                         # Send email notification to admins
-                       # send_notification_email(request.user, data, request_type)
+                        send_notification_email(request.user, data, request_type)
 
                         return redirect('apply_leave')
             else:
@@ -97,39 +97,39 @@ def apply_leave(request):
         'holidays': holidays,
         'request_type': request.POST.get('request_type', ''),  # Preserve request type
     }
-    return render(request, 'LMS/apply_leave.html', context)     
+    return render(request, 'LMS/apply_leave.html', context)   
 
 
-# def send_notification_email(user, request_data, request_type):
-#     # Get all admins with full access
-#     admin_profiles = UserProfile.objects.filter(role__full_access=True)
-#     admin_emails = [profile.employeeID.Email for profile in admin_profiles if profile.employeeID.Email]
+def send_notification_email(user, request_data, request_type):
+    # Get all admins with full access
+    admin_profiles = UserProfile.objects.filter(role__full_access=True)
+    admin_emails = [profile.employeeID.Email for profile in admin_profiles if profile.employeeID.Email]
 
-#     if not admin_emails:
-#         return
+    if not admin_emails:
+        return
 
-#     # Prepare the email subject and content
-#     subject = f'New {request_type.title()} Request from {user.username}'
-#     context = {
-#         'user': user,
-#         'request_data': request_data,
-#         'request_type': request_type,
-#     }
-#     html_message = render_to_string('emails/request_notification.html', context)
-#     plain_message = strip_tags(html_message)
-#     from_email = 'zahid.solutions.net@gmail.com'  # The sender's email address
-#     reply_to = [user.email]  # Reply-to will also be the user's email
+    # Prepare the email subject and content
+    subject = f'New {request_type.title()} Request from {user.username}'
+    context = {
+        'user': user,
+        'request_data': request_data,
+        'request_type': request_type,
+    }
+    html_message = render_to_string('emails/request_notification.html', context)
+    plain_message = strip_tags(html_message)
+    from_email = 'zahid.solutions.net@gmail.com'  # The sender's email address
+    reply_to = [user.email]  # Reply-to will also be the user's email
 
-#     # Create the email message
-#     email = EmailMultiAlternatives(
-#         subject=subject,
-#         body=plain_message,
-#         from_email=from_email,
-#         to=admin_emails,
-#         reply_to=reply_to
-#     )
-#     email.attach_alternative(html_message, "text/html")
-#     email.send()  # Correctly send the email
+    # Create the email message
+    email = EmailMultiAlternatives(
+        subject=subject,
+        body=plain_message,
+        from_email=from_email,
+        to=admin_emails,
+        reply_to=reply_to
+    )
+    email.attach_alternative(html_message, "text/html")
+    email.send()  # Send the email
 
 
 @login_required
@@ -220,6 +220,8 @@ def leave_list(request):
 @login_required
 def approve_leave(request, leave_id):
     leave_request = get_object_or_404(LeaveRequest, pk=leave_id)
+    user_profile = UserProfile.objects.get(user=leave_request.employee)
+    employee = user_profile.employeeID
     if leave_request.status == 'PENDING':  # Only update if pending
         leave_balance = LeaveBalance.objects.filter(employee=leave_request.employee, leave_type=leave_request.leave_type).first()
         
@@ -230,7 +232,18 @@ def approve_leave(request, leave_id):
                 leave_request.status = 'APPROVED'
                 leave_balance.save()
                 leave_request.save()
-                   
+
+                # Send approval email to the employee
+                send_mail(
+                    'Leave Request Approved',
+                    f'Dear {employee.Fullname},\n\n'
+                    f'Your leave request for {leave_request.leave_type.name} from {leave_request.from_date} to {leave_request.to_date} '
+                    f'has been approved by {request.user.username}.\n\n'
+                    'Best Regards,',
+                    settings.DEFAULT_FROM_EMAIL,
+                    [employee.Email],
+                    fail_silently=False,
+                )
             else:
                 messages.error(request, 'Not enough remaining days to approve this request.')
                 return redirect('pending_requests')
@@ -244,20 +257,31 @@ def approve_leave(request, leave_id):
         )
 
     return redirect('pending_requests')
-    # return render(request, 'LMS/leave_detail.html', {'leave_request': leave_request})
 
 
 @login_required
 def reject_leave(request, leave_id):
     leave_request = get_object_or_404(LeaveRequest, pk=leave_id)
+    user_profile = UserProfile.objects.get(user=leave_request.employee)
+    employee = user_profile.employeeID
     leave_balance = LeaveBalance.objects.filter(employee=leave_request.employee, leave_type=leave_request.leave_type).first()
     leave_balance.locked_days -= leave_request.duration
     leave_request.status = 'REJECTED'
     leave_balance.save()
     leave_request.save()
-    
-    
 
+    # Send rejection email to the employee
+    send_mail(
+        'Leave Request Rejected',
+        f'Dear {employee.Fullname},\n\n'
+        f'Your leave request for {leave_request.leave_type.name} from {leave_request.from_date} to {leave_request.to_date} '
+        f'has been rejected by {request.user.username}.\n\n'
+        'Best Regards,',
+        settings.DEFAULT_FROM_EMAIL,
+        [employee.Email],
+        fail_silently=False,
+    )
+    
     # Create notification for the employee
     notification = Notification.objects.create(
         recipient=leave_request.employee,
@@ -265,10 +289,78 @@ def reject_leave(request, leave_id):
         leave_request=leave_request,
     )
 
-    # ... (Optional: Additional actions based on notification creation)
+    return redirect('pending_requests')
+
+
+@login_required
+def approve_compansation(request, leave_id):
+    leave_request = get_object_or_404(Compansation, pk=leave_id)
+    user_profile = UserProfile.objects.get(user=leave_request.employee)
+    employee = user_profile.employeeID
+
+    if leave_request.status == 'PENDING':
+        leave_request.status = 'APPROVED'
+        leave_request.approved_date = date.today()  # Set the approved date to today
+        leave_request.save()
+
+        # Get or create LeaveBalance for the employee and 'Compensation' leave type
+        leave_type = leave_request.leave_type
+        leave_balance, created = LeaveBalance.objects.get_or_create(
+            employee=leave_request.employee,
+            leave_type=leave_type
+        )
+
+        # Update remaining days based on approved compensation days
+        approved_days = leave_request.duration
+
+        if created:
+            leave_balance.remaining_days = approved_days
+        else:
+            leave_balance.remaining_days += approved_days
+
+        leave_balance.save()
+
+        # Send approval email to the employee
+        send_mail(
+            'Compensation Request Approved',
+            f'Dear {employee.Fullname},\n\n'
+            f'Your compensation request for {leave_request.leave_type.name} on {leave_request.from_date} '
+            f'has been approved by {request.user.username}.\n\n'
+            'Best Regards,',
+            settings.DEFAULT_FROM_EMAIL,
+            [employee.Email],
+            fail_silently=False,
+        )
+
+        return redirect('pending_requests')
+
+    else:
+        return redirect('pending_requests')
+
+
+@login_required
+def reject_compansation(request, leave_id):
+    leave_request = get_object_or_404(Compansation, pk=leave_id)
+    user_profile = UserProfile.objects.get(user=leave_request.employee)
+    employee = user_profile.employeeID
+    leave_request.status = 'REJECTED'
+    leave_request.save()
+
+    # Send rejection email to the employee
+    send_mail(
+        'Compensation Request Rejected',
+        f'Dear {employee.Fullname},\n\n'
+        f'Your compensation request for {leave_request.leave_type.name} on {leave_request.from_date} '
+        f'has been rejected by {request.user.username}.\n\n'
+        'Best Regards,',
+        settings.DEFAULT_FROM_EMAIL,
+        [employee.Email],
+        fail_silently=False,
+    )
 
     return redirect('pending_requests')
-    # return render(request, 'LMS/leave_detail.html', {'leave_request': leave_request})
+
+
 
 @login_required
 def leave_detail(request , leave_id ):
@@ -325,24 +417,22 @@ def leave_types(request):
             )
 
         return redirect('leave_types')
-    
-    last_additional_days = request.session.get('last_additional_days')  
-    last_leave_type_id = request.session.get('last_leave_type_id')  
+
+    # Retrieve the first CarryForwardPolicy
+    first_carry_forward_policy = CarryForwardPolicy.objects.first()
     max_compansation_days = CompensationSettings.objects.first().max_compensation_days
-    
-    
+
     context = {
         'users': users,
         'leave_types': leave_types,
         'holidays': holidays,
         'notifications': notifications,
         'leave_balances': leave_balances,
-        'last_additional_days' : last_additional_days,
-        'last_leave_type_id':last_leave_type_id,
-        'max_compansation_days':max_compansation_days,
+        'last_additional_days': first_carry_forward_policy,
+        'max_compansation_days': max_compansation_days,
     }
 
-    return render(request , 'LMS/leave_types.html' , context)
+    return render(request, 'LMS/leave_types.html', context)
 
 
 
@@ -359,19 +449,16 @@ def delete_compansation(request, delete_compansation):
     leave_to_delete = get_object_or_404(Compansation , id=delete_compansation)
 
     leave_to_delete.delete()
-    return redirect('leave_list')  # Explicitly return redirect on success
+    return redirect('pending_requests')  # Explicitly return redirect on success
 
 
 @login_required
 def delete_holiday(request, holiday_id):
     leave_to_delete = get_object_or_404(Holiday , id=holiday_id)
 
-    if request.user.userprofile.role.full_access:
-        # Admin users can delete any leave request
-        leave_to_delete.delete()
-        return redirect('company_holiday')  # Explicitly return redirect on success
-    else:
-        return redirect('company_holiday')  # Or display an error message
+    leave_to_delete.delete()
+    return redirect('leave_types')  # Explicitly return redirect on success
+
 
         
 
@@ -493,44 +580,6 @@ def mark_notification_seen(request, notification_id):
 
 
 
-@login_required
-def approve_compansation(request, leave_id):
-    leave_request = get_object_or_404(Compansation, pk=leave_id)
-
-    if leave_request.status == 'PENDING':
-        leave_request.status = 'APPROVED'
-        leave_request.approved_date = date.today()  # Set the approved date to today
-        leave_request.save()
-
-        # Get or create LeaveBalance for the employee and 'Compensation' leave type
-        leave_type = leave_request.leave_type
-        leave_balance, created = LeaveBalance.objects.get_or_create(
-            employee=leave_request.employee,
-            leave_type=leave_type
-        )
-
-        # Update remaining days based on approved compensation days
-        approved_days = leave_request.duration
-
-        if created:
-            leave_balance.remaining_days = approved_days
-        else:
-            leave_balance.remaining_days += approved_days
-
-        leave_balance.save()
-
-        return redirect('pending_requests')
-
-    else:
-        return redirect('pending_requests')
-
-
-@login_required
-def reject_compansation(request, leave_id):
-    leave_request = get_object_or_404(Compansation, pk=leave_id)
-    leave_request.status = 'REJECTED'
-    leave_request.save()
-    return redirect('pending_requests')
 
 @login_required
 def reset_balances(request):
@@ -538,40 +587,46 @@ def reset_balances(request):
         leave_type_id = request.POST.get('leave_type')
         additional_days = int(request.POST.get('additional_days'))
 
-        # Store the additional_days in the session
-        request.session['last_additional_days'] = additional_days
-        request.session['last_leave_type_id'] = leave_type_id
+        # Check if there is already a CarryForwardPolicy record
+        carry_forward_policy = CarryForwardPolicy.objects.first()
 
-        # Get the selected leave type and its default max days allowed
+        if carry_forward_policy:
+            # Update the existing record
+            carry_forward_policy.leave_type_id = leave_type_id
+            carry_forward_policy.carry_forward_days = additional_days
+            carry_forward_policy.save()
+        else:
+            # Create a new record if none exists
+            CarryForwardPolicy.objects.create(
+                leave_type_id=leave_type_id,
+                carry_forward_days=additional_days
+            )
+
+        # Handle resetting balances (this part remains unchanged)
         selected_leave_type = get_object_or_404(LeaveType, id=leave_type_id)
         selected_max_days_allowed = selected_leave_type.max_days_allowed
 
-        # Get all leave types
         all_leave_types = LeaveType.objects.all()
 
         for leave_type in all_leave_types:
             existing_balances = LeaveBalance.objects.filter(leave_type=leave_type)
             for balance in existing_balances:
-                # Reset to default max days allowed
                 balance.remaining_days = leave_type.max_days_allowed
-
-                # If the leave type is the selected one, add the additional days
                 if leave_type.id == int(leave_type_id):
                     if balance.remaining_days < additional_days:
                         balance.remaining_days += additional_days
                     else:
                         balance.remaining_days = additional_days + leave_type.max_days_allowed
-
                 balance.save()
 
         return redirect('leave_types')
 
     leave_types = LeaveType.objects.all()
 
-    # Retrieve the last additional_days from the session
-    last_additional_days = request.session.get('last_additional_days', '')
+    # Retrieve the first CarryForwardPolicy
+    first_carry_forward_policy = CarryForwardPolicy.objects.first()
 
-    return render(request, 'LMS/leave_types.html', {'leave_types': leave_types, 'last_additional_days': last_additional_days})
+    return render(request, 'LMS/leave_types.html', {'leave_types': leave_types, 'last_additional_days': first_carry_forward_policy})
 
 
 @login_required

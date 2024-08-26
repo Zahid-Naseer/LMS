@@ -5,7 +5,6 @@ from django.core.validators import MinValueValidator
 
 class Employee(models.Model):
     Fullname = models.CharField(default="", max_length=20)
-    # adress = models.CharField(default="", max_length=20)
     service = models.CharField(default="" , max_length=225)         
     Email = models.EmailField(default="")
     

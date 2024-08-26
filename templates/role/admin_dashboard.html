@@ -2,232 +2,280 @@
 {% load static %}
 
 {% block content %}
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Arial', sans-serif;
+    }
 
-      <!-- Counts Section -->
-      <section class="py-5">
-        <div class="container-fluid">
-          <div class="row">
-            <!-- Count item widget-->
-            <div class="col-xl-2 col-md-4 col-6 gy-4 gy-xl-0">
-              <div class="d-flex">
-                <svg class="svg-icon svg-icon-sm svg-icon-heavy text-primary mt-1 flex-shrink-0">
-                  <use xlink:href="#user-1"> </use>
-                </svg>
-                <div class="ms-2">
-                  <h3 class="h4 text-dark text-uppercase fw-normal">New Clients</h3>
-                  <p class="text-gray-500 small">Last 7 days</p>
-                  <p class="display-6 mb-0">25</p>
-                </div>
-              </div>
-            </div>
-            <!-- Count item widget-->
-            <div class="col-xl-2 col-md-4 col-6 gy-4 gy-xl-0">
-              <div class="d-flex">
-                <svg class="svg-icon svg-icon-sm svg-icon-heavy text-primary mt-1 flex-shrink-0">
-                  <use xlink:href="#survey-1"> </use>
-                </svg>
-                <div class="ms-2">
-                  <h3 class="h4 text-dark text-uppercase fw-normal">Work Orders</h3>
-                  <p class="text-gray-500 small">Last 5 days</p>
-                  <p class="display-6 mb-0">400</p>
-                </div>
-              </div>
-            </div>
-            <!-- Count item widget-->
-            <div class="col-xl-2 col-md-4 col-6 gy-4 gy-xl-0">
-              <div class="d-flex">
-                <svg class="svg-icon svg-icon-sm svg-icon-heavy text-primary mt-1 flex-shrink-0">
-                  <use xlink:href="#list-details-1"> </use>
-                </svg>
-                <div class="ms-2">
-                  <h3 class="h4 text-dark text-uppercase fw-normal">New Quotes</h3>
-                  <p class="text-gray-500 small">Last 2 months</p>
-                  <p class="display-6 mb-0">342</p>
-                </div>
-              </div>
-            </div>
-            <!-- Count item widget-->
-            <div class="col-xl-2 col-md-4 col-6 gy-4 gy-xl-0">
-              <div class="d-flex">
-                <svg class="svg-icon svg-icon-sm svg-icon-heavy text-primary mt-1 flex-shrink-0">
-                  <use xlink:href="#numbers-1"> </use>
-                </svg>
-                <div class="ms-2">
-                  <h3 class="h4 text-dark text-uppercase fw-normal">New Invoices</h3>
-                  <p class="text-gray-500 small">Last 2 days</p>
-                  <p class="display-6 mb-0">123</p>
-                </div>
-              </div>
-            </div>
-            <!-- Count item widget-->
-            <div class="col-xl-2 col-md-4 col-6 gy-4 gy-xl-0">
-              <div class="d-flex">
-                <svg class="svg-icon svg-icon-sm svg-icon-heavy text-primary mt-1 flex-shrink-0">
-                  <use xlink:href="#literature-1"> </use>
-                </svg>
-                <div class="ms-2">
-                  <h3 class="h4 text-dark text-uppercase fw-normal">Open Cases</h3>
-                  <p class="text-gray-500 small">Last 3 months</p>
-                  <p class="display-6 mb-0">92</p>
-                </div>
-              </div>
-            </div>
-            <!-- Count item widget-->
-            <div class="col-xl-2 col-md-4 col-6 gy-4 gy-xl-0">
-              <div class="d-flex">
-                <svg class="svg-icon svg-icon-sm svg-icon-heavy text-primary mt-1 flex-shrink-0">
-                  <use xlink:href="#paper-stack-1"> </use>
-                </svg>
-                <div class="ms-2">
-                  <h3 class="h4 text-dark text-uppercase fw-normal">New Cases</h3>
-                  <p class="text-gray-500 small">Last 7 days</p>
-                  <p class="display-6 mb-0">70</p>
-                </div>
-              </div>
-            </div>
-          </div>
+    body {
+        background-color: #f4f4f4;
+    }
+
+    .hero-section {
+        height: 60vh;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        color: #333;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 2rem;
+    }
+
+    .hero-content h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+        color: #555;
+    }
+
+    .hero-content p {
+        font-size: 1.25rem;
+        margin-bottom: 1.5rem;
+        color: #777;
+    }
+
+    .btn {
+        padding: 0.8rem 1.5rem;
+        background-color: #ff5733;
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 25px;
+        transition: background-color 0.3s;
+    }
+
+    .btn:hover {
+        background-color: #c44523;
+    }
+
+    .features-section, .about-section, .contact-section {
+        padding: 3rem 2rem;
+        background-color: #fff;
+        text-align: center;
+    }
+
+    .feature-cards {
+        display: flex;
+        gap: 2rem;
+        justify-content: center;
+        margin-top: 2rem;
+    }
+
+    .card {
+        background-color: #f9f9f9;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s;
+    }
+
+    .card:hover {
+        transform: translateY(-10px);
+    }
+
+    .about-section {
+        background-color: #f4f4f4;
+    }
+
+    .contact-section form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+
+    .contact-section input, .contact-section textarea {
+        padding: 1rem;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+
+    .contact-section button {
+        padding: 1rem;
+        background-color: #333;
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 25px;
+        transition: background-color 0.3s;
+    }
+
+    .contact-section button:hover {
+        background-color: #555;
+    }
+
+    footer {
+        background-color: #333;
+        color: #fff;
+        padding: 1rem;
+        text-align: center;
+    }
+
+    @media screen and (max-width: 768px) {
+        .hamburger {
+            display: flex;
+        }
+        .nav-links {
+            position: absolute;
+            right: 0;
+            height: 100vh;
+            top: 70px;
+            flex-direction: column;
+            background-color: #333;
+            width: 50%;
+            align-items: center;
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in;
+        }
+
+        .nav-links a {
+            padding: 1.5rem 0;
+            font-size: 1.5rem;
+        }
+
+        nav.active .nav-links {
+            transform: translateX(0%);
+        }
+
+        .feature-cards {
+            flex-direction: column;
+        }
+
+    }
+
+    /* Styling for the LMS Features Section */
+#lms-features {
+    background-color: #f8f9fa;
+    padding: 40px 20px;
+    border-radius: 8px;
+    margin: 20px 0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#lms-features h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #343a40;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#lms-features .features-info {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+#lms-features p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #6c757d;
+    margin-bottom: 20px;
+}
+
+#lms-features ul {
+    list-style-type: none;
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+#lms-features ul li {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 15px;
+    padding-left: 20px;
+    position: relative;
+    color: #495057;
+}
+
+#lms-features ul li::before {
+    content: "\f00c"; /* FontAwesome checkmark */
+    font-family: FontAwesome;
+    color: #28a745;
+    position: absolute;
+    left: 0;
+    top: 2px;
+    font-size: 18px;
+}
+
+#lms-features ul li strong {
+    font-weight: 600;
+    color: #343a40;
+}
+
+#lms-features .features-info p:last-child {
+    text-align: center;
+    font-weight: 500;
+    color: #495057;
+}
+
+</style> 
+
+<body>
+    <section id="home" class="hero-section">
+        <div class="hero-content">
+            <h1>Welcome to the Leave Management System</h1>
+            <p>Manage your leaves and schedules with ease</p>
+            <a href="#features" style="background-color:green; " class="btn">Explore Features</a>
         </div>
-      </section>
-      <!-- Header Section-->
-      <section class="bg-white py-5">
-        <div class="container-fluid">
-          <div class="row d-flex align-items-md-stretch">
-            <!-- To Do List-->
-            <div class="col-lg-3 col-md-6">
-              <div class="card shadow-0">
-                <div class="card-body p-0">
-                  <h2 class="h3 fw-normal">To do List</h2>
-                  <p class="text-sm text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-                  <form>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" id="list1">
-                      <label class="form-check-label text-sm" for="list1">Similique sunt in culpa qui officia</label>
-                    </div>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" id="list2">
-                      <label class="form-check-label text-sm" for="list2">Ed ut perspiciatis unde omnis iste</label>
-                    </div>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" id="list3">
-                      <label class="form-check-label text-sm" for="list3">At vero eos et accusamus et iusto </label>
-                    </div>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" id="list4">
-                      <label class="form-check-label text-sm" for="list4">Explicabo Nemo ipsam voluptatem</label>
-                    </div>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" id="list5">
-                      <label class="form-check-label text-sm" for="list5">Similique sunt in culpa qui officia</label>
-                    </div>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" id="list6">
-                      <label class="form-check-label text-sm" for="list6">At vero eos et accusamus et iusto</label>
-                    </div>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" id="list7">
-                      <label class="form-check-label text-sm" for="list7">Similique sunt in culpa qui officia</label>
-                    </div>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" id="list8">
-                      <label class="form-check-label text-sm" for="list8">Ed ut perspiciatis unde omnis iste</label>
-                    </div>
-                  </form>
+    </section>
+
+    <section id="features" class="features-section">
+        <h2>Features</h2>
+        <div class="feature-cards">
+            <a href="{% url 'apply_leave' %}">  
+                <div class="card">
+                    <h3>Apply for Leave</h3>
+                    <p>Seamlessly apply for leaves with just a few clicks.</p>
                 </div>
-              </div>
-            </div>
-            <!-- Pie Chart-->
-            <div class="col-lg-3 col-md-6">
-              <div class="card shadow-0">
-                <h2 class="h3 fw-normal">Project Beta progress</h2>
-                <p class="text-sm text-muted"> Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-                <div class="pie-chart">
-                  <canvas id="pieChart" style="width: 300px; height: 300px; max-width: 100%"> </canvas>
+            </a> 
+            <a href="{% url 'leave_list' %}">
+                <div class="card">
+                    <h3>Leave Requests & Balances</h3>
+                    <p>Keep track of your leave balance and never miss out.</p>
                 </div>
-              </div>
-            </div>
-            <!-- Line Chart -->
-            <div class="col-lg-6 col-md-12">
-              <div class="card shadow-0">
-                <h2 class="h3 fw-normal">Sales marketing report</h2>
-                <p class="text-sm text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolor amet officiis</p>
-                <canvas id="lineCahrt"></canvas>
-              </div>
-            </div>
-          </div>
+            </a>
+            <a href="{% url 'leave_types' %}"> 
+                <div class="card">
+                    <h3>Company Leaves & Holidays</h3>
+                    <p>View upcoming holidays in your company calendar.</p>
+                </div>
+            </a> 
         </div>
-      </section>
-      <!-- Statistics Section-->
-      <section class="py-5">
-        <div class="container-fluid">
-          <div class="row align-items-stretch gy-4">
-            <div class="col-lg-4">
-              <!-- Income-->
-              <div class="card text-center h-100 mb-0">
-                <div class="card-body">
-                  <svg class="svg-icon svg-icon-big svg-icon-light mb-4 text-muted">
-                    <use xlink:href="{% static '#sales-up-1' %} "> </use>
-                  </svg>
-                  <p class="text-gray-700 display-6">126,418</p>
-                  <p class="text-primary h2 fw-bold">All Income</p>
-                  <p class="text-xs text-gray-600 mb-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit sed do.</p>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-4">
-              <!-- Monthly Usage-->
-              <div class="card h-100 mb-0">
-                <div class="card-body">
-                  <h2 class="h3 fw-normal mb-4">Monthly Usage</h2>
-                  <div class="row align-items-center mb-3 gx-lg-5">
-                    <div class="col-lg-6">
-                      <table class="w-100">
-                        <tbody>
-                          <tr>
-                            <td>
-                              <div class="position-relative mx-auto" style="max-width: 120px">
-                                <canvas class="mx-auto" id="monthlyProgress" width="150" height="150"></canvas>
-                                <p class="h3 text-primary fw-normal position-absolute top-50 start-50 translate-middle text-center m-0">80%</p>
-                              </div>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                    <div class="col-lg-6 border-start">
-                      <p class="fw-bold h2 text-primary">80.56 Gb</p>
-                      <p class="text-xs fw-light text-gray-500 mb-0">Current Plan</p>
-                      <p class="text-gray-500">100 Gb Monthly</p>
-                    </div>
-                  </div>
-                  <p class="text-xs text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing.</p>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-4">
-              <!-- User Actibity-->
-              <div class="card h-100 mb-0">
-                <div class="card-body">
-                  <h2 class="h3 fw-normal mb-4">User Activity</h2>
-                  <p class="display-6">210</p>
-                  <h3 class="h4 fw-normal">Social Users</h3>
-                  <div class="progress rounded-0 mb-3">
-                    <div class="progress-bar progress-bar bg-primary" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
-                  <div class="d-flex justify-content-between">
-                    <div class="text-start">
-                      <p class="h5 fw-normal mb-2">Pages Visits</p>
-                      <p class="fw-bold text-xl text-primary mb-0">{{ total_views }}</p>
-                    </div>
-                    <div class="text-end">
-                      <p class="h5 fw-normal mb-2">New Visits</p>
-                      <p class="fw-bold text-xl text-primary mb-0">73.4%</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-     
+    </section>
+
+    <section id="about" class="about-section">
+        <h2>About Us</h2>
+        <p>We provide an easy-to-use leave management system that simplifies the process of applying and managing leaves in an organization.</p>
+    </section>
+
+   <section id="lms-features" class="features-section">
+    <h2>Why Choose Our Leave Management System?</h2>
+    <div class="features-info">
+        <p>Our Leave Management System is designed to simplify and streamline the leave management process for both employees and administrators. Here’s what makes it stand out:</p>
+        <ul>
+            <li><strong>Automated Leave Requests:</strong> Employees can easily apply for leave, and managers can approve or reject requests with just a few clicks.</li>
+            <li><strong>Real-Time Leave Balance Tracking:</strong> Keep track of leave balances in real-time, so employees always know how much time they have available.</li>
+            <li><strong>Comprehensive Reporting:</strong> Generate detailed reports on leave usage, trends, and remaining balances, helping you manage workforce availability effectively.</li>
+            <li><strong>Customizable Leave Policies:</strong> Tailor the system to fit your company’s unique leave policies, including vacation, sick leave, and compensation days.</li>
+            <li><strong>Email Notifications:</strong> Receive instant email notifications for leave approvals, rejections, and upcoming leave, keeping everyone informed and in sync.</li>
+        </ul>
+        <p>Our system is built to adapt to your organization ’s needs, ensuring a smooth and efficient leave management process from start to finish.</p>
+    </div>
+</section>
+
+    <script src="script.js"></script>
+    <script>
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
+
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+    </script>
+</body>
 {% endblock %}
